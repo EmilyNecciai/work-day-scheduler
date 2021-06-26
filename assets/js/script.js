@@ -1,14 +1,11 @@
+// var agendaDesc = {};
+
+
 // DISPLAY CURRENT DATE & TIME AT TOP OF PAGE
-var currentDateTime = moment().format("MMMM Do YYYY, h:mm:ss a");
-// var currentHour = moment().hour();
-var currentHour = 10;
-var currentDay = moment().day();
-    // console.log(currentDateTime);
-        console.log(currentHour);
-        console.log(currentDay);
+var currentDate = moment().format("MMMM Do YYYY");
+var currentHour = moment().hour();
 
-
-$("#currentDay").append("Today: " + currentDateTime);
+$("#currentDay").append("Today: " + currentDate);
 
 
 
@@ -18,21 +15,49 @@ var busStart = 9;
 var busEnd = 18;
 
 for (var m = busStart; m < busEnd; m++) {
-    var timeBlock = $(".container").append("<div id='time-block' class='time-block row'></div>").html[m];
-    var hourSpace = $("#time-block").append("<div id='hour' class='hour col-1'><p></p></div>");
-    var descField = $("#time-block").append("<textarea id='description' class='description col-10'></textarea>");
-    var saveButton = $("#time-block").append("<button type='button' id='saveBtn' class='saveBtn col-1'><i class='fas fa-save'></i></button>");    
-    console.log(m);
+        agendaDisplay(m);
 }
 
-// if (m === currentHour) {
-//     $("textarea").addClass("present");
-// } else if (currentHour >= m) {
-//     $("textarea").addClass("past");
-// } else {
-//     $("textarea").addClass("future");
-// } 
 
+function agendaDisplay(now) {
+
+    var agendaDiv = $("<div>").addClass("time-block row");
+    // agendaDiv.attr("data-id", "`id${m}");
+    $(agendaDiv).attr("data-id", now);
+    $(agendaDiv).appendTo(".container");
+
+    var hourSpace = $("<div>").addClass("hour col-1");
+    $(hourSpace).appendTo(agendaDiv).text(now + "00");
+
+    var descField = $("<textarea>").addClass("desc col-10");
+    $(descField).appendTo(agendaDiv);
+
+    var saveButton = $("<button>").addClass("saveBtn col-1");
+    $(saveButton).appendTo(agendaDiv).html("<i class='fas fa-save'></i>");
+
+    if (now === currentHour) {
+        $(descField).addClass("present");
+    } else if (currentHour >= now) {
+        $(descField).addClass("past");
+    } else {
+        $(descField).addClass("future");
+    } 
+}
   
+agendaDisplay();
+
+
+//LOCAL STORAGE CODE
+
+// LOAD LOCAL STORAGE
+
+// var loadAgendaDescs = function() {
+//     tasks = JSON.parse(localStorage.getItem("agendaDesc"));
+// }
+
+//STORE ON SAVE BUTTON CLICK
+  
+
+
 
 

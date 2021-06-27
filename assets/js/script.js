@@ -1,4 +1,4 @@
-// var agendaDesc = {};
+var agendaDesc = {};
 
 
 // DISPLAY CURRENT DATE & TIME AT TOP OF PAGE
@@ -27,12 +27,15 @@ function agendaDisplay(now) {
     $(agendaDiv).appendTo(".container");
 
     var hourSpace = $("<div>").addClass("hour col-1");
+    $(hourSpace).attr("data-id", now);
     $(hourSpace).appendTo(agendaDiv).text(now + "00");
 
     var descField = $("<textarea>").addClass("desc col-10");
+    $(descField).attr("data-id", now);
     $(descField).appendTo(agendaDiv);
 
     var saveButton = $("<button>").addClass("saveBtn col-1");
+    $(saveButton).attr("data-id", now);
     $(saveButton).appendTo(agendaDiv).html("<i class='fas fa-save'></i>");
 
     if (now === currentHour) {
@@ -42,6 +45,10 @@ function agendaDisplay(now) {
     } else {
         $(descField).addClass("future");
     } 
+
+    loadExistingAgenda();
+
+
 }
   
 agendaDisplay();
@@ -49,15 +56,63 @@ agendaDisplay();
 
 //LOCAL STORAGE CODE
 
-// LOAD LOCAL STORAGE
 
-// var loadAgendaDescs = function() {
-//     tasks = JSON.parse(localStorage.getItem("agendaDesc"));
+
+// $("button").click(e => console.log($(e.currentTarget).attr("data-id")));
+// var agendaDescHandler = function(id) {
+//     var agendaDescInput = $("textarea").val();
+//     agendaDesc = {
+//         agendaId: id,
+//         desc: agendaDescInput
+//     }
+//     saveAgendaItem(agendaDesc);
 // }
 
-//STORE ON SAVE BUTTON CLICK
-  
+$("button").click(function () {
+    // console.log($(this).attr("data-id"));
+    var id = $(this).attr("data-id");
+    var agendaDescInput = $("textarea").val();
+
+    // var desc = $("textarea").attr("data-id", id).val();
+    // console.log(id);
+    // console.log(desc);
+    // var desc = $(this).attr("data-id") NEED TEXTAREA??
+
+        if (id === $("textarea").attr("data-id")) {
+            agendaDesc = {
+                agendaId: id,
+                desc: agendaDescInput
+            }        
+        } else {
+            agendaDesc = {
+                agendaId: id,
+                desc: ""
+            }
+        
+        }
+    saveAgendaItem(agendaDesc);
+});
+
+function saveAgendaItem(agendaDesc) {
+    localStorage.setItem("agendaItems", JSON.stringify(agendaDesc));
+  }
+
+function loadExistingAgenda() {
+    agendaDescInput = JSON.parse(localStorage.getItem("agendaItems"));
+
+    if (!agendaDesc) {
+        return false;   
+    }    
+  }
 
 
 
 
+// LOCAL STORAGE TEST ZONE - GET ONE TO WORK
+// var loadAgendaDescs = function() {
+//     console.log(localStorage.getItem("description"));
+// }
+// $("button").click(function() {
+//     localStorage.setItem("description", "Hi");
+//     loadAgendaDescs();
+// });

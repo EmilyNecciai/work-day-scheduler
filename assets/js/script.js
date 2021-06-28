@@ -1,16 +1,12 @@
-var agendaDesc = {};
-
+// CREATE AGENDA ITEMS OBJECT
+var agendaItemsObj = [];
 
 // DISPLAY CURRENT DATE & TIME AT TOP OF PAGE
 var currentDate = moment().format("MMMM Do YYYY");
 var currentHour = moment().hour();
-
 $("#currentDay").append("Today: " + currentDate);
 
-
-
 // CREATE CONTAINER ELEMENTS
-
 var busStart = 9;
 var busEnd = 18;
 
@@ -18,16 +14,14 @@ for (var m = busStart; m < busEnd; m++) {
         agendaDisplay(m);
 }
 
-
+// DISPLAY AND COLOR CODE THE AGENDA
 function agendaDisplay(now) {
 
     var agendaDiv = $("<div>").addClass("time-block row");
-    // agendaDiv.attr("data-id", "`id${m}");
     $(agendaDiv).attr("data-id", now);
     $(agendaDiv).appendTo(".container");
 
     var hourSpace = $("<div>").addClass("hour col-1");
-    $(hourSpace).attr("data-id", now);
     $(hourSpace).appendTo(agendaDiv).text(now + "00");
 
     var descField = $("<textarea>").addClass("desc col-10");
@@ -35,7 +29,6 @@ function agendaDisplay(now) {
     $(descField).appendTo(agendaDiv);
 
     var saveButton = $("<button>").addClass("saveBtn col-1");
-    $(saveButton).attr("data-id", now);
     $(saveButton).appendTo(agendaDiv).html("<i class='fas fa-save'></i>");
 
     if (now === currentHour) {
@@ -45,70 +38,85 @@ function agendaDisplay(now) {
     } else {
         $(descField).addClass("future");
     } 
-
-    loadExistingAgenda();
-
-
+    // Pull in existing agenda items
+    // loadExistingAgenda();
 }
-  
-agendaDisplay();
 
+// LOAD THE AGENDA - FOR SOME REASON THIS GIVES YOU UNDEFINED BLOCK
+// agendaDisplay();
 
+var desc;
+var descId;
 //LOCAL STORAGE CODE
 
+// Get Agenda Desc Content
+$("div").on("blur", "textarea", function() {
+    // get current text
+    desc = $(this)
+      .val()
+      .trim();
+    //   console.log(desc);
+  
+    // get the parent div's data-id attribute
+    descId = $(this)
+    .closest("div")
+    .attr("data-id");
+    // console.log(descId);
 
-
-// $("button").click(e => console.log($(e.currentTarget).attr("data-id")));
-// var agendaDescHandler = function(id) {
-//     var agendaDescInput = $("textarea").val();
-//     agendaDesc = {
-//         agendaId: id,
-//         desc: agendaDescInput
-//     }
-//     saveAgendaItem(agendaDesc);
-// }
-
-$("button").click(function () {
-    // console.log($(this).attr("data-id"));
-    var id = $(this).attr("data-id");
-    var agendaDescInput = $("textarea").val();
-
-    // var desc = $("textarea").attr("data-id", id).val();
-    // console.log(id);
-    // console.log(desc);
-    // var desc = $(this).attr("data-id") NEED TEXTAREA??
-
-        if (id === $("textarea").attr("data-id")) {
-            agendaDesc = {
-                agendaId: id,
-                desc: agendaDescInput
-            }        
-        } else {
-            agendaDesc = {
-                agendaId: id,
-                desc: ""
-            }
-        
-        }
-    saveAgendaItem(agendaDesc);
 });
 
-function saveAgendaItem(agendaDesc) {
-    localStorage.setItem("agendaItems", JSON.stringify(agendaDesc));
-  }
+// When the save button is clicked, we should collect what the text is in the same column as the save button. 
 
-function loadExistingAgenda() {
-    agendaDescInput = JSON.parse(localStorage.getItem("agendaItems"));
+$("div").on("click", "button", function() {
 
-    if (!agendaDesc) {
-        return false;   
-    }    
-  }
+    // Find the ID of the button clicked, as determined by it's parent div. 
+    var btnId = $(this)
+    .closest("div")
+    .attr("data-id");
+
+    // console.log(btnId);
+    console.log(descId);
+    console.log(desc);
+
+
+    agendaItemsObj.push({
+        time: btnId,
+        agendaDesc: desc
+    })
+
+    saveAgendaItem();
+
+});
 
 
 
+var saveAgendaItem = function() {
+    localStorage.setItem("agendaItem", JSON.stringify(agendaItemsObj));
+  };
+  
 
-// LOCAL STORAGE TEST ZONE - GET ONE TO WORK
+var loadAgendaDescs = function() {
+    desc.text = JSON.parse(localStorage.getItem("agendaDesc"));
+
+    // if (!agendaItemsObj) {
+    //     agendaItemsObj = {
+    //         time: "",
+    //         agendaDesc: ""
+    //     };
+    // }
+
+    // $.each(agendaItemsObj, function(descId, desc) {
+    //     if (descId === time) {
+            
+    //     }
+
+
+    //   });
+    };
+
+
+
+// LOCAL STORAGE TEST ZONE 
 // var loadAgendaDescs = function() {
 //     console.log(localStorage.getItem("description"));
 // }

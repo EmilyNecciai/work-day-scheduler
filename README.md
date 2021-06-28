@@ -1,6 +1,10 @@
 # work-day-scheduler
 Week 5 Challenge for the GW Bootcamp
 
+Live Site: https://emilynecciai.github.io/work-day-scheduler/
+
+![Screenshot](assets/img/my-screenshot.png)
+
 ## User Story
 AS AN employee with a busy schedule
 I WANT to add important events to a daily planner
